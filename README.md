@@ -30,7 +30,7 @@ vyconfigure --host="https://<VyOS IP or Hostname>" --api-key="<VyOS HTTP API key
 ## How does VyConfigure work?
 VyConfigure works by using [the VyOS HTTP API](https://docs.vyos.io/en/latest/configuration/service/https.html). It translates the configuration into YAML files and then back to a set of commands when you apply.
 
-# What's the purpose of VyConfigure?
+## What's the purpose of VyConfigure?
 I created VyConfigure so I could manage my VyOS config the GitOps way. I found tools like Ansible too heavy and wanted something lightweight and simple that could be easily read.
 
 ## Unsupported features
