@@ -1,9 +1,6 @@
 env:
   - GO111MODULE=on
 
-gomod:
-  proxy: true
-
 builds:
   - env:
       - CGO_ENABLED=0
@@ -25,7 +22,6 @@ dockers:
       - "ghcr.io/charlie-haley/vyconfigure:{{ .Version }}-amd64"
       - "ghcr.io/charlie-haley/vyconfigure:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-amd64"
       - "ghcr.io/charlie-haley/vyconfigure:{{ .Major }}.{{ .Minor }}-amd64"
-      - "ghcr.io/charlie-haley/vyconfigure:{{ .Major }}-amd64"
     use: buildx
     dockerfile: Dockerfile
     goarch: amd64
@@ -44,7 +40,6 @@ dockers:
       - "ghcr.io/charlie-haley/vyconfigure:{{ .Version }}-arm64v8"
       - "ghcr.io/charlie-haley/vyconfigure:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm64v8"
       - "ghcr.io/charlie-haley/vyconfigure:{{ .Major }}.{{ .Minor }}-arm64v8"
-      - "ghcr.io/charlie-haley/vyconfigure:{{ .Major }}-arm64v8"
     use: buildx
     dockerfile: Dockerfile
     goarch: arm64
@@ -79,11 +74,6 @@ docker_manifests:
     image_templates:
     - ghcr.io/charlie-haley/vyconfigure:{{ .Major }}.{{ .Minor }}-amd64
     - ghcr.io/charlie-haley/vyconfigure:{{ .Major }}.{{ .Minor }}-arm64v8
-
-  - name_template: ghcr.io/charlie-haley/vyconfigure:{{ .Major }}
-    image_templates:
-    - ghcr.io/charlie-haley/vyconfigure:{{ .Major }}-amd64
-    - ghcr.io/charlie-haley/vyconfigure:{{ .Major }}-arm64v8
 
 release:
   prerelease: auto
