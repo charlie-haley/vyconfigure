@@ -61,16 +61,20 @@ func CmdsToData(cmds []string, op string) []api.Cmd {
 	return res
 }
 
-// mapToCmds
+// mapToCmds maps an interface to an array of VyOS commands
 func mapToCmds(top bool, cmds *[]string, nm interface{}, prefix string) error {
-	assign := func(cmd string, v interface{}) error {
-		switch v.(type) {
+	assign := func(cmd string, v interface{}, array bool) error {
+		switch v := v.(type) {
 		case map[string]interface{}, []interface{}:
 			if err := mapToCmds(false, cmds, v, cmd); err != nil {
 				return err
 			}
 		case string:
-			*cmds = append(*cmds, cmd)
+			if array {
+				*cmds = append(*cmds, cmd+" "+v)
+			} else {
+				*cmds = append(*cmds, cmd)
+			}
 		default:
 			*cmds = append(*cmds, cmd+" "+v.(string))
 		}
@@ -84,22 +88,33 @@ func mapToCmds(top bool, cmds *[]string, nm interface{}, prefix string) error {
 			cmd := buildCmd(top, prefix, k)
 
 			// this is pretty ugly, basically when building the cmds we only care about the key if the value is {}
-			res, _ := json.Marshal(v)
-			if string(res) == "{}" {
-				if err := assign(cmd, k); err != nil {
+			r, _ := json.Marshal(v)
+			res := string(r)
+
+			if res == "{}" {
+				if err := assign(cmd, k, false); err != nil {
 					return err
 				}
 				continue
 			}
+			// again, very crude but check if we're looking at an array of string
+			if strings.HasPrefix(res, "[") && strings.HasSuffix(res, "]") {
+				for _, val := range v.([]interface{}) {
+					if err := assign(cmd, val, true); err != nil {
+						return err
+					}
+				}
+				continue
+			}
 
-			if err := assign(cmd, v); err != nil {
+			if err := assign(cmd, v, false); err != nil {
 				return err
 			}
 		}
 	case []interface{}:
 		for _, v := range nm {
 			cmd := buildCmd(true, prefix, "")
-			if err := assign(cmd, v); err != nil {
+			if err := assign(cmd, v, false); err != nil {
 				return err
 			}
 		}

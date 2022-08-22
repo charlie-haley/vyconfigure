@@ -16,10 +16,12 @@ var (
 		"test firewall ipv6-name WAN_IN rule 20 action",
 		"test firewall ipv6-name WAN_IN rule 20 protocol",
 		"test firewall ipv6-name WAN_IN rule 30",
+		"test service mdns repeater interface eth1.10",
+		"test service mdns repeater interface eth2.20",
+		"test service mdns repeater interface eth1.50",
 	}
 )
 
-// YamlToCmds
 func Test_YamlToCmds(t *testing.T) {
 	yaml := `
 firewall:
@@ -36,6 +38,13 @@ firewall:
             action: accept
             protocol: ipv6-icmp
         "30": {}
+service:
+    mdns:
+        repeater:
+            interface:
+            - eth1.10
+            - eth2.20
+            - eth1.50
     `
 
 	res, err := YamlToCmds([]byte(yaml), "test ")
@@ -67,8 +76,19 @@ func Test_JsonToCmds(t *testing.T) {
                     }
                 }
             }
+        },
+        "service": {
+            "mdns": {
+                "repeater": {
+                    "interface": [
+                        "eth1.10",
+                        "eth2.20",
+                        "eth1.50"
+                    ]
+                }
+            }
         }
-    }	
+    }
     `
 
 	res, err := JsonToCmds([]byte(json), "test ")
