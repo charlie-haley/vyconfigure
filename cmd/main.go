@@ -23,7 +23,6 @@ func Run() {
 	}
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{Destination: &o.Host, Name: "host", Usage: "The hostname of the VyOS HTTP API.", EnvVars: []string{"VYCONFIGURE_HOST"}},
-		&cli.StringFlag{Destination: &o.ApiId, Name: "api-id", Usage: "API ID for the HTTP API.", EnvVars: []string{"VYCONFIGURE_API_ID"}},
 		&cli.StringFlag{Destination: &o.ApiKey, Name: "api-key", Usage: "API key for the HTTP API.", EnvVars: []string{"VYCONFIGURE_API_KEY"}},
 		&cli.StringFlag{Destination: &o.ConfigDirectory, Name: "config-dir", Value: ".", Usage: "Directory where config is stored.", EnvVars: []string{"VYCONFIGURE_CONFIG_DIR"}},
 		&cli.BoolFlag{Destination: &o.Insecure, Name: "insecure", Usage: "Whether to skip verifying the SSL certificate.", EnvVars: []string{"VYCONFIGURE_INSECURE"}},
