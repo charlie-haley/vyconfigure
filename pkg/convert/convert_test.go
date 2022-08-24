@@ -9,12 +9,12 @@ import (
 
 var (
 	testCommands = []string{
-		"test firewall ipv6-name WAN_IN default-action",
-		"test firewall ipv6-name WAN_IN rule 10 state established",
-		"test firewall ipv6-name WAN_IN rule 10 state related",
-		"test firewall ipv6-name WAN_IN rule 10 action",
-		"test firewall ipv6-name WAN_IN rule 20 action",
-		"test firewall ipv6-name WAN_IN rule 20 protocol",
+		"test firewall ipv6-name WAN_IN default-action drop",
+		"test firewall ipv6-name WAN_IN rule 10 state established enable",
+		"test firewall ipv6-name WAN_IN rule 10 state related enable",
+		"test firewall ipv6-name WAN_IN rule 10 action accept",
+		"test firewall ipv6-name WAN_IN rule 20 action accept",
+		"test firewall ipv6-name WAN_IN rule 20 protocol ipv6-icmp",
 		"test firewall ipv6-name WAN_IN rule 30",
 		"test service mdns repeater interface eth1.10",
 		"test service mdns repeater interface eth2.20",

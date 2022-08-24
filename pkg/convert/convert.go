@@ -63,14 +63,14 @@ func CmdsToData(cmds []string, op string) []api.Cmd {
 
 // mapToCmds maps an interface to an array of VyOS commands
 func mapToCmds(top bool, cmds *[]string, nm interface{}, prefix string) error {
-	assign := func(cmd string, v interface{}, array bool) error {
+	assign := func(cmd string, v interface{}, array bool, ignoreValue bool) error {
 		switch v := v.(type) {
 		case map[string]interface{}, []interface{}:
 			if err := mapToCmds(false, cmds, v, cmd); err != nil {
 				return err
 			}
 		case string:
-			if array {
+			if array || !ignoreValue {
 				*cmds = append(*cmds, cmd+" "+v)
 			} else {
 				*cmds = append(*cmds, cmd)
@@ -92,7 +92,7 @@ func mapToCmds(top bool, cmds *[]string, nm interface{}, prefix string) error {
 			res := string(r)
 
 			if res == "{}" {
-				if err := assign(cmd, k, false); err != nil {
+				if err := assign(cmd, k, false, true); err != nil {
 					return err
 				}
 				continue
@@ -100,21 +100,21 @@ func mapToCmds(top bool, cmds *[]string, nm interface{}, prefix string) error {
 			// again, very crude but check if we're looking at an array of string
 			if strings.HasPrefix(res, "[") && strings.HasSuffix(res, "]") {
 				for _, val := range v.([]interface{}) {
-					if err := assign(cmd, val, true); err != nil {
+					if err := assign(cmd, val, true, false); err != nil {
 						return err
 					}
 				}
 				continue
 			}
 
-			if err := assign(cmd, v, false); err != nil {
+			if err := assign(cmd, v, false, false); err != nil {
 				return err
 			}
 		}
 	case []interface{}:
 		for _, v := range nm {
 			cmd := buildCmd(true, prefix, "")
-			if err := assign(cmd, v, false); err != nil {
+			if err := assign(cmd, v, false, false); err != nil {
 				return err
 			}
 		}
